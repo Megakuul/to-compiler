@@ -1,4 +1,3 @@
-*.out
+.vscode/**
 build/**
-CMakeFiles/**
 Makefile

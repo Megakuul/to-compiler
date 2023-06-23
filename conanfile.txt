@@ -1,6 +1,5 @@
 [requires]
-# You may have multiple lines like the one below, if you have many dependencies.
-$library/$version@$owner/$branch
 
 [generators]
-cmake
+CMakeDeps
+CMakeToolchain
