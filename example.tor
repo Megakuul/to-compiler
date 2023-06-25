@@ -1,0 +1,9 @@
+just get example.tor;
+
+guy with the name = "Hello"
+guy with the age = 23
+guy with the speed = 300
+
+the absolute minimum {
+ just get age;
+}

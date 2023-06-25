@@ -3,8 +3,6 @@ project(to-compiler CXX)
 
 set(CMAKE_CXX_STANDARD 11)
 
-find_package(ZLIB REQUIRED)
-
 file(GLOB SOURCES "src/*.cpp")
 add_executable(${PROJECT_NAME} ${SOURCES})
-target_link_libraries(${PROJECT_NAME} ZLIB::ZLIB)
+target_link_libraries(${PROJECT_NAME})
