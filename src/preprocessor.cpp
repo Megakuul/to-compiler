@@ -1,4 +1,5 @@
 #include <string>
+#include <iostream>
 #include <stdexcept>
 #include <utility.h>
 
@@ -11,18 +12,24 @@ string parseIncludes(string entryfile) {
   size_t includePos = entryfile.find(incStatement);
   if (includePos != string::npos) {
     size_t sPos = includePos + incStatement.length();
-    string* pathBuf = new string[0];
+    string* pathBuf = new string;
 
     for (size_t i = sPos; i < entryfile.length(); i++) {
       char *c = &entryfile[i];
+      cout << *c << endl;
       if (isspace(*c)) continue;
 
+      if (*c == '\n') break;
+
       if (!isalpha(*c) && *c != '.' && *c != '/' && *c != '\\') {
-        getLinePosition()
-        throw runtime_error("Illegal character at")
-      } 
-    }          
+        string err = "[ Preprocessor Error ]:\nIllegal character at " + getPositionFromIndex(entryfile, sPos);
+        throw runtime_error(err);
+      }
+
+      *pathBuf += *c;
+    }
+    cout << *pathBuf << endl;     
   } 
 
-  entryfile.find("just get");
+  return "";
 }

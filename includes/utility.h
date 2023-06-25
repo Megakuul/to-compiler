@@ -1,7 +1,7 @@
+#ifndef UTILITY_H
+#define UTILITY_H
+
 #include <string>
 
-#ifndef PARSER_H
-#define PARSER_H
-
-  void getLinePosition(const std::string& filename, size_t index, size_t& line, size_t& charPos);
+  std::string getPositionFromIndex(const std::string& str, size_t index);
 #endif

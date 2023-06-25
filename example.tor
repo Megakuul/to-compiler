@@ -1,4 +1,4 @@
-just get example.tor;
+justget:: example.tor
 
 guy with the name = "Hello"
 guy with the age = 23
