@@ -4,6 +4,6 @@
         "conan": {}
     },
     "include": [
-        "/home/linus/Documents/Repos/to-compiler/build/CMakePresets.json"
+        "C:\\Users\\megakuul\\Documents\\Repos\\to-compiler\\build\\CMakePresets.json"
     ]
 }

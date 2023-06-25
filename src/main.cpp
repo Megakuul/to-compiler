@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
+#include <filesystem>
 #include <preprocessor.h>
 
 using namespace std;
@@ -12,22 +14,23 @@ int main(int argcount, char* arg[]) {
         return 1;
     }
 
-   ifstream file(arg[1]);
-
+    filesystem::path pfile = arg[1];
+    ifstream file(pfile);
     if (!file.is_open()) {
         cout << "[ tc Panic ]:\nFailed to read file: "<<arg[1]<<endl;
         return 1;
     }
 
-    string sfile;
-    if (!(file >> sfile)) {
+    stringstream filebuf;
+    filebuf << file.rdbuf();
+    string sfile = filebuf.str();
+    if (sfile.empty()) {
         cout << "[ tc Panic ]:\nFailed to read content from the file: "<<arg[1]<<endl;
         return 1;
     }
     file.close();
 
-    parseIncludes(sfile);
+    parseIncludes(sfile, pfile.remove_filename());
     
-
     return 0;
 }

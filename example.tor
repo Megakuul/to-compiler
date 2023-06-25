@@ -1,4 +1,6 @@
-justget:: example.tor
+justget::example.tor;
+justget::second.tor;
+justget::third.tor;
 
 guy with the name = "Hello"
 guy with the age = 23
