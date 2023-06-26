@@ -30,7 +30,12 @@ int main(int argcount, char* arg[]) {
     }
     file.close();
 
-    parseIncludes(sfile, pfile.remove_filename());
+    try {
+        cout << parseIncludes(sfile, pfile.remove_filename());
+    } catch (const runtime_error err) {
+        cout << err.what();
+    }
+    
     
     return 0;
 }

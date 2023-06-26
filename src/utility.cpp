@@ -13,8 +13,8 @@
  * @param index index of the error
 */
 std::string getPositionFromIndex(const std::string& str, size_t index) {
-    size_t linebuf = 0;
-    size_t charbuf = 0;
+    size_t linebuf = 1;
+    size_t charbuf = 1;
 
     for (size_t i = 0; i < index; i++) {
         if (str[i] == '\n') {
