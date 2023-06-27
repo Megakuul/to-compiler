@@ -30,8 +30,14 @@ int main(int argcount, char* arg[]) {
     }
     file.close();
 
+    // TODO Implement this feature
+    /**
+     * Holds all included dependencies to avoid duplicated includes
+     */
+    vector<string> includedDependencies = {pfile.filename().string()}; 
+
     try {
-        cout << parseIncludes(sfile, pfile.remove_filename());
+        cout << parseIncludes(sfile, pfile.remove_filename(), includedDependencies);
     } catch (const runtime_error err) {
         cout << err.what();
     }

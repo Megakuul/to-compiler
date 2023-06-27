@@ -4,13 +4,11 @@
 #include <sstream>
 #include <fstream>
 #include <filesystem>
-#include <utility.h>
+#include <logger.h>
 
 using namespace std;
 
-// TODO: Create a Logger
-
-string parseIncludes(string entryfile, filesystem::path basePath) {
+string parseIncludes(string entryfile, filesystem::path basePath, vector<string> &includedDependencies) {
 
   /**
    * Defines the string of the include statement
@@ -23,27 +21,22 @@ string parseIncludes(string entryfile, filesystem::path basePath) {
   */
   string fullBuf = entryfile;
 
-  // TODO Implement this feature
-  /**
-   * Holds all included dependencies to avoid duplicated includes
-  */
-  vector<string> includedDependencies;
-
   /**
    * Defines the position of the current include statement
   */
   size_t curIncludePos = entryfile.find(incStatement);
 
   while (curIncludePos != string::npos) {
+    
     /**
      * Defines the position after the current include statement
     */
     size_t afterCurIncludePos = curIncludePos + incStatement.length();
     
     /**
-     * Buffer for the path of the include
+     * Buffer for the include
     */
-    string* pathBuf = new string;
+    string* includeBuf = new string;
 
     curIncludePos = entryfile.find(incStatement, curIncludePos + 1);
 
@@ -55,26 +48,49 @@ string parseIncludes(string entryfile, filesystem::path basePath) {
       if (*c == ';') break;
 
       if (!isalnum(*c) && *c != '.' && *c != '/' && *c != '\\') {
-        string err = "[ Preprocessor Error ]:\nIllegal character at " + getPositionFromIndex(entryfile, i);
-        throw runtime_error(err);
+        throw runtime_error(getFormattedErrorString(
+          "Include contains illegal character. Use only [.] [/] [\\], letters, or/and numbers.",
+          "PREPROCESSOR",
+          entryfile, i
+        ));
       }
 
-      *pathBuf += *c;
+      *includeBuf += *c;
     }
-
     /**
      * Defines the path for the include (basePath + pathBuf)
     */
     filesystem::path incPath = basePath;
-    incPath.append(*pathBuf);
-    
+    incPath.append(*includeBuf);
+    cout << incPath << endl;
+    if (!filesystem::exists(incPath)) {
+      throw runtime_error(getFormattedErrorString(
+          "Invalid include: " + incPath.string() + 
+          " \nInclude paths must be relative to the application entry point, not the current file.",
+          "PREPROCESSOR"
+      ));
+    }
+
+    // Check if the dependency is already loaded
+    if (find(includedDependencies.begin(), includedDependencies.end(), incPath.filename().string()) 
+        != includedDependencies.end()) {
+        continue;
+    }
+
+    // Add the current dependency to the list
+    includedDependencies.push_back(incPath.filename().string());
+
+
     /**
      * Defines a ifstream of the include file
     */
     ifstream ifsfile(incPath);
 
     if (!ifsfile.is_open()) {
-      throw runtime_error("[ Preprocessor Error ]:\nFailed to read file " + incPath.string());
+      throw runtime_error(getFormattedErrorString(
+        "Failed to read file: " + incPath.string(),
+        "PREPROCESSOR"
+      ));
     }
 
     /**
@@ -91,12 +107,14 @@ string parseIncludes(string entryfile, filesystem::path basePath) {
     string sfile = ssfilebuf.str();
 
     if (sfile.empty()) {
-      throw runtime_error("[ Preprocessor Error ]:\nFailed to read content from " + *pathBuf);
+      throw runtime_error(getFormattedErrorString(
+        "Failed to read contents of file: " + incPath.string(),
+        "PREPROCESSOR"
+      ));
     }
     ifsfile.close();
 
-    fullBuf += parseIncludes(sfile, basePath);
-    includedDependencies.push_back(*pathBuf);
+    fullBuf += parseIncludes(sfile, basePath, includedDependencies);
   } 
 
   return fullBuf;

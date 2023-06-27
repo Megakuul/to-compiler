@@ -1,5 +1,5 @@
-justget::dep1.tor;
-justget::dep2.tor;
+justget::dependencies/dep1.tor;
+justget::dependencies/dep2.tor;
 
 guy with the name = "Hello"
 guy with the age = 23

@@ -3,5 +3,4 @@
 
 #include <string>
 
-  std::string getPositionFromIndex(const std::string& str, size_t index);
 #endif
