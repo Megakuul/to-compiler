@@ -34,14 +34,17 @@ int main(int argcount, char* arg[]) {
     /**
      * Holds all included dependencies to avoid duplicated includes
      */
-    vector<string> includedDependencies = {pfile.filename().string()}; 
+    vector<string> includedDependencies = {pfile.filename().string()};
+
+    string codeBuf; 
 
     try {
-        cout << parseIncludes(sfile, pfile.remove_filename(), includedDependencies);
+        codeBuf = parseIncludes(sfile, pfile.remove_filename(), includedDependencies);
+        terse(codeBuf);
+        cout << codeBuf;
     } catch (const runtime_error err) {
         cout << err.what();
     }
-    
     
     return 0;
 }

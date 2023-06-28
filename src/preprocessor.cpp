@@ -8,6 +8,14 @@
 
 using namespace std;
 
+/**
+ * This function grabs all includes recursiv togheter and concatinates them all togheter
+ * 
+ * @param entryfile entrypoint of the application as string
+ * @param basePath folder where the entrypoint file is contained
+ * @param includedDependencies list of already included dependencies (pass by reference)
+ * @return the concatinated string containing the whole programmcode
+*/
 string parseIncludes(string entryfile, filesystem::path basePath, vector<string> &includedDependencies) {
 
   /**
@@ -118,4 +126,59 @@ string parseIncludes(string entryfile, filesystem::path basePath, vector<string>
   } 
 
   return fullBuf;
+}
+
+
+void terse(string &file) {
+
+  string tersedBuf;
+
+  for (size_t i = 0; i < file.length(); i++) {
+    // Remove Spaces
+    if (isspace(file[i])) {
+      file.erase(i, 1);
+      i--;
+      continue;
+    };
+    
+    // Remove Comments
+    if (file[i] == '#') {
+      size_t endComChar = file.find(';', i) + 1;
+      if (endComChar == string::npos) {
+        throw runtime_error(getFormattedErrorString(
+          "Comment not closed, close comments with ';'",
+          "PREPROCESSOR",
+          file, i
+        ));
+      }
+      file.erase(i, endComChar-i);
+      i--;
+      continue;
+    }
+
+    // Remove Include Statements
+    string incStatement = "justget::";
+    bool incf = true;
+    for (size_t j = 0; j < incStatement.length(); j++) {
+      if (file[i+j] != incStatement[j]) {
+        incf = false;
+        break;
+      }
+    }
+    if (incf) {
+      size_t endIncChar = file.find(';', i) + 1;
+      if (endIncChar == string::npos) {
+        throw runtime_error(getFormattedErrorString(
+          "Include statement not closed, close includes with ';'",
+          "PREPROCESSOR",
+          file, i
+        ));
+      }
+      file.erase(i, endIncChar-i+1);
+      i--;
+      continue;
+    }
+  }
+
+  return;
 }
