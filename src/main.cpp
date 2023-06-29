@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <vector>
 #include <filesystem>
 #include <preprocessor.h>
 
@@ -41,7 +42,7 @@ int main(int argcount, char* arg[]) {
     try {
         codeBuf = parseIncludes(sfile, pfile.remove_filename(), includedDependencies);
         terse(codeBuf);
-        cout << codeBuf;
+        cout << codeBuf << endl;
     } catch (const runtime_error err) {
         cout << err.what();
     }

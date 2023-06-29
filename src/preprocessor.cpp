@@ -3,8 +3,11 @@
 #include <stdexcept>
 #include <sstream>
 #include <fstream>
+#include <algorithm>
+#include <vector>
 #include <filesystem>
 #include <logger.h>
+
 
 using namespace std;
 
